@@ -1,0 +1,102 @@
+version: "3.2"
+
+volumes:
+  mongodb_data:
+    driver: local
+
+services:
+  api:
+    image: casperselfie-api 
+    build:
+      context: ../.
+      dockerfile: api/Dockerfile.dev
+    environment:
+      - S3_URL
+      - BLOCK_EXPLORER_URL
+      - NODE_ENV=development
+      - MONGO_INITDB_DATABASE
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+      - MONGO_CLUSTER_URL
+      - CASPER_FUND_ACCOUNTS_SIZE
+      - CASPER_CHAIN_NAME
+      - CASPER_NODE_ADDRESS
+      - CASPER_EVENT_STREAM_ADDRESS
+      - CASPER_CONTRACT_HASH
+      - CASPER_PRIVATE_KEY
+      - CASPER_PRIVATE_KEY_VARIANT
+      - CASPER_SECRET
+      - SUBMISSION_EXP_DATE
+      - SMTP_HOST
+      - SMTP_USER
+      - SMTP_PASS
+      - SMTP_FROM
+      - REEDEM_URL
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_BUCKET_NAME
+      - RAPID_API_URL
+      - RAPID_API_HOST
+      - RAPID_API_KEY
+    restart: on-failure
+    volumes:
+      - ./../api:/app
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+
+  selfie-pwa:
+    build:
+      context: ../.
+      dockerfile: selfie-pwa/Dockerfile.dev
+    image: casperselfie-pwa
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_API_URL=${API_URL}
+      - REACT_APP_NFT_PREFIX=${NFT_PREFIX}
+      - REACT_APP_S3_URL=${S3_URL}
+      - REACT_APP_IPFS_URL=${IPFS_URL}
+      - REACT_APP_GTM_ID=${GTM_ID}
+      - REACT_APP_TERMS_URL=${TERMS_URL}
+    restart: on-failure
+    volumes:
+      - /app/node_modules # prefer container's node_modules instead of volume-mounted ones
+      - ./../selfie-pwa:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+  reedem-app:
+    build:
+      context: ../.
+      dockerfile: reedem-app/Dockerfile.dev
+    image: casperselfie-reedem
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_API_URL=${API_URL}
+      - REACT_APP_BLOCK_EXPLORER_URL=${BLOCK_EXPLORER_URL}
+      - REACT_APP_NFT_PREFIX=${NFT_PREFIX}
+      - REACT_APP_S3_URL=${S3_URL}
+      - REACT_APP_IPFS_URL=${IPFS_URL}
+      - REACT_APP_GTM_ID=${GTM_ID}
+    restart: on-failure
+    volumes:
+      - /app/node_modules # prefer container's node_modules instead of volume-mounted ones
+      - ./../reedem-app:/app
+    ports:
+      - "3001:3000"
+    depends_on:
+      - api
+
+  db:
+    image: "mongo"
+    environment:
+      - MONGO_INITDB_DATABASE
+      - MONGO_INITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017-27019:27017-27019"
