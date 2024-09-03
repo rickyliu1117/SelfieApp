@@ -40,6 +40,7 @@ import {
   generateKeyPair,
 } from "./utils/casper";
 
+console.log( CASPER_PRIVATE_KEY);
 const hostKeys = getKeysFromHexPrivKey(
   CASPER_PRIVATE_KEY,
   KEY_VARIANTS.ED25519
@@ -58,7 +59,8 @@ export class CasperService {
       CASPER_NODE_ADDRESS,
       CASPER_CHAIN_NAME
     );
-    this.contractClient.setContractHash(CASPER_CONTRACT_HASH);
+    console.log ("hash-d6d8b876d8b51680db08c51bf4a9b5ebe2042d874099d9cfba5b398f477a221");
+    this.contractClient.setContractHash("hash-d6d8b876d8b51680db08c51bf4a9b5ebe2042d874099d9cfba5b398f477a221");
     this.eventStream = new EventStream(CASPER_EVENT_STREAM_ADDRESS);
 
 

@@ -15,7 +15,8 @@ const DB_PASSWORD = encodeURIComponent(
   process.env["MONGO_INITDB_ROOT_PASSWORD"]!
 );
 const DB_URL = process.env["MONGO_CLUSTER_URL"];
-const DB_URI = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_URL}?w=majority&retryWrites=false`;
+//const DB_URI = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_URL}?w=majority&retryWrites=false`;
+const DB_URI = `mongodb://127.0.0.1:27017/content?w=majority&retryWrites=false`;
 const DB_NAME = process.env.MONGO_INITDB_DATABASE;
 
 export interface IDeploy {

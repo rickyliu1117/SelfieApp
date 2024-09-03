@@ -17,6 +17,9 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT;
 
+console.log( "11111111111111111112");
+console.log( process.env);
+
 app.use(express.urlencoded()); //Parse URL-encoded bodies
 app.use(express.json({ limit: "5mb" })); //Parse URL-encoded bodies
 

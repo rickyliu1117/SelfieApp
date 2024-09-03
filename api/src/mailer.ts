@@ -2,14 +2,14 @@ import nodemailer from "nodemailer";
 
 const { SMTP_HOST, SMTP_USER, SMTP_PASS, SMTP_FROM, REEDEM_URL, BLOCK_EXPLORER_URL } = process.env;
 
-const transporter = nodemailer.createTransport({
-  host: SMTP_HOST,
-  port: 587,
-  auth: {
-    user: SMTP_USER,
-    pass: SMTP_PASS
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   host: SMTP_HOST,
+//   port: 587,
+//   auth: {
+//     user: SMTP_USER,
+//     pass: SMTP_PASS
+//   },
+// });
 
 export const createMessage = (
   from: string,
@@ -51,20 +51,33 @@ ${"https:" + REEDEM_URL + "/?" + "code=" + encodeURIComponent(code) + "&email=" 
 `,
 });
 
+// export const sendEmail = (message: {
+//   from: string;
+//   to: string;
+//   subject: string;
+//   html: string;
+// }) => {
+//   transporter.sendMail(message, function (err, info) {
+//     if (err) {
+//       console.log("Error", message, err);
+//     } else {
+//       console.log(new Date());
+//       console.log(`E-mail sent to: ${message.to}`);
+//       console.log(`*** Log:`);
+//       console.log(JSON.stringify(info));
+//     }
+//   });
+// };
+
 export const sendEmail = (message: {
   from: string;
   to: string;
   subject: string;
   html: string;
 }) => {
-  transporter.sendMail(message, function (err, info) {
-    if (err) {
-      console.log("Error", message, err);
-    } else {
-      console.log(new Date());
-      console.log(`E-mail sent to: ${message.to}`);
-      console.log(`*** Log:`);
-      console.log(JSON.stringify(info));
-    }
-  });
+  console.log(new Date());
+  console.log(`E-mail sent to: ${message.to}`);
+  console.log(`*** Log:`);
+  //console.log(JSON.stringify(info));
 };
+  
