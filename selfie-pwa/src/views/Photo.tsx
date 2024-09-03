@@ -94,8 +94,10 @@ const ImageProcessing = ({
 };
 
 const Photo = ({ onSubmit }: { onSubmit: (image: string) => void }) => {
-  // TODO: Fix the types
-  const isOnline = useSelector((state: any) => state.offline.online);
+  // TODO: Fix the types, diable image process 
+  // const isOnline = useSelector((state: any) => state.offline.online);
+
+  const isOnline = false;
 
   const webcamRef = React.useRef<Webcam & HTMLVideoElement>(null);
   const [imgSrc, setImgSrc] = React.useState<string | null>(null);
@@ -104,6 +106,7 @@ const Photo = ({ onSubmit }: { onSubmit: (image: string) => void }) => {
   const capture = React.useCallback(() => {
     if (webcamRef.current) {
       const imageSrc = webcamRef.current?.getScreenshot();
+      console.log(imageSrc);
       setImgSrc(imageSrc);
     }
   }, [webcamRef]);
@@ -140,11 +143,7 @@ const Photo = ({ onSubmit }: { onSubmit: (image: string) => void }) => {
           </div>
           <div className="flex">
             <Button onClick={() => resetPhoto()}>Retake photo</Button>
-            <Button
-              onClick={() =>
-                !isOnline ? onSubmit(imgSrc) : setFiltersView(true)
-              }
-            >
+            <Button onClick={() => !isOnline ? onSubmit(imgSrc) : setFiltersView(true)}>
               Next
             </Button>
           </div>

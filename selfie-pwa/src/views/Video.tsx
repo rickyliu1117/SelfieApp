@@ -13,30 +13,30 @@ const blobToBase64 = (blob: Blob) => {
   });
 }
 
-const ImageProcessing = ({
-  image,
-  setImg,
-}: {
-  image: string;
-  setImg: (image: string) => void;
-}) => {
-  return (
-    <>
-      <StepHeader>Personalize your selfie</StepHeader>
-      <div className="flex">
-        <div className="flex-1 flex justify-center items-center">
-          <div className="max-w-lg w-full p-3">
-            <img src={image} />
-          </div>
-        </div>
-        <div className="flex-1 flex justify-center items-center">
-          <div className="w-lg w-full p-3">
-          </div>
-        </div>
-      </div>
-    </>
-  );
-};
+// const ImageProcessing = ({
+//   image,
+//   setImg,
+// }: {
+//   image: string;
+//   setImg: (image: string) => void;
+// }) => {
+//   return (
+//     <>
+//       <StepHeader>Personalize your selfie</StepHeader>
+//       <div className="flex">
+//         <div className="flex-1 flex justify-center items-center">
+//           <div className="max-w-lg w-full p-3">
+//             <img src={image} />
+//           </div>
+//         </div>
+//         <div className="flex-1 flex justify-center items-center">
+//           <div className="w-lg w-full p-3">
+//           </div>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
 
 const Preview = ({ recordedChunks }: any) => {
   const blob = new Blob(recordedChunks, {
@@ -49,7 +49,7 @@ const Preview = ({ recordedChunks }: any) => {
   );
 }
 
-const Photo = ({ onSubmit }: { onSubmit: (image: string) => void }) => {
+const Video = ({ onSubmit }: { onSubmit: (image: string) => void }) => {
   const [expiryTimestamp, setExpiryTimestamp] = useState(new Date());
 
   let now = new Date();
@@ -161,5 +161,5 @@ const Photo = ({ onSubmit }: { onSubmit: (image: string) => void }) => {
   );
 };
 
-export default Photo;
+export default Video;
 
