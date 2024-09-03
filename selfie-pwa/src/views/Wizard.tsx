@@ -176,6 +176,7 @@ const Wizard = () => {
   const onSubmit = () => {
     if (!submitedImage) return;
     const contentHash = blake.blake2bHex(submitedImage, undefined, 32);
+    console.log(submitedImage);
     dispatch(sendStateAction({ ...form, contentHash, content: submitedImage, submitType }));
     setClaimed(true);
   };
