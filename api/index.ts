@@ -9,7 +9,7 @@ import { createMessage, sendEmail } from "./src/mailer";
 import { guidGenerator } from "./src/utils";
 import { CasperService } from "./src/casper";
 import { ReedemStatus, DeployStatus, SubmissionType } from "./src/types";
-import { s3, convertBase64ToBuffer } from "./src/s3";
+//import { s3, convertBase64ToBuffer } from "./src/s3";
 import { EXTENSION_BY_SUBMIT_TYPE } from "./src/constants";
 
 dotenv.config();
@@ -17,8 +17,6 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT;
 
-console.log( "11111111111111111112");
-console.log( process.env);
 
 app.use(express.urlencoded()); //Parse URL-encoded bodies
 app.use(express.json({ limit: "5mb" })); //Parse URL-encoded bodies
@@ -81,14 +79,14 @@ const run = async () => {
     const { name, description, organization, email, contentHash, content, submitType } =
       req.body;
 
-    const uploaded = await s3
-      .upload({
-        Bucket: process.env.AWS_BUCKET_NAME!,
-        Key: `submited/${contentHash}.${EXTENSION_BY_SUBMIT_TYPE[submitType as SubmissionType]}`,
-        ContentEncoding: "base64",
-        Body: convertBase64ToBuffer(content),
-      })
-      .promise();
+    // const uploaded = await s3
+    //   .upload({
+    //     Bucket: process.env.AWS_BUCKET_NAME!,
+    //     Key: `submited/${contentHash}.${EXTENSION_BY_SUBMIT_TYPE[submitType as SubmissionType]}`,
+    //     ContentEncoding: "base64",
+    //     Body: convertBase64ToBuffer(content),
+    //   })
+    //   .promise();
 
     const code = guidGenerator();
 
@@ -211,11 +209,15 @@ const run = async () => {
       assignedKeyPair: { $ne: null },
     });
 
+    console.log( "code = %s, email = %s", code, email);
+    console.log( "assignedKeyPair: 111111111, assignedKeyPair", existingUser);
     if (existingUser) {
+      console.log( "assignedKeyPair: 2222222222, assignedKeyPair");
       const populatedKeyPair = await existingUser.populate<{
         assignedKeyPair: IKeyPair;
       }>("assignedKeyPair");
 
+      console.log( "assignedKeyPair: 33333333333, assignedKeyPair");
       const sentDeploy = await casperService.mintToken(
         value.id,
         {
@@ -224,7 +226,7 @@ const run = async () => {
           url: value.url,
           description: value.description,
           organization: value.organization,
-          event: 'Austin, Texas'
+          event: '2024 Web3 Summit, HK'
         },
         populatedKeyPair.assignedKeyPair.publicKeyInHex
       );
@@ -240,8 +242,10 @@ const run = async () => {
       }
     }
 
+    console.log( "assignedKeyPair: 4444444444444, assignedKeyPair");
     const fundedAccount = await casperService.getFundedAccount();
     if (fundedAccount && value) {
+      console.log( "assignedKeyPair: 555555555555, assignedKeyPair");
       const { privateKeyInPem } = fundedAccount;
       const sentDeploy = await casperService.mintToken(
         value.id,
