@@ -191,6 +191,7 @@ const StatusScreen = () => {
   }, []);
 
   const mintNFT = () => {
+    console.log( "api_url:", API_URL);
     fetch(`${API_URL}/reedem?code=${encodeURIComponent(code!)}&email=${encodeURIComponent(email!)}`, { method: "POST" })
       .then((res) => res.json())
       .then((data) => {

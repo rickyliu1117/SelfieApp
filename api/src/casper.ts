@@ -16,7 +16,6 @@ import {
 import { KeyPair, Deploy } from "./db";
 
 import {
-  FUND_ACCOUNT_SIZE,
   CASPER_CHAIN_NAME,
   CASPER_NODE_ADDRESS,
   CASPER_EVENT_STREAM_ADDRESS,
@@ -40,7 +39,10 @@ import {
   generateKeyPair,
 } from "./utils/casper";
 
-console.log( CASPER_PRIVATE_KEY);
+
+const FUND_ACCOUNT_SIZE = 1;
+
+
 const hostKeys = getKeysFromHexPrivKey(
   CASPER_PRIVATE_KEY,
   KEY_VARIANTS.ED25519
@@ -56,12 +58,14 @@ export class CasperService {
     this.bootstrapAccounts();
 
     this.contractClient = new CEP47Client(
-      CASPER_NODE_ADDRESS,
-      CASPER_CHAIN_NAME
+      process.env.CASPER_NODE_ADDRESS!,
+      process.env.CASPER_CHAIN_NAME!
     );
-    console.log ("hash-d6d8b876d8b51680db08c51bf4a9b5ebe2042d874099d9cfba5b398f477a221");
-    this.contractClient.setContractHash("hash-d6d8b876d8b51680db08c51bf4a9b5ebe2042d874099d9cfba5b398f477a221");
-    this.eventStream = new EventStream(CASPER_EVENT_STREAM_ADDRESS);
+
+    
+
+    this.contractClient.setContractHash(process.env.CASPER_CONTRACT_HASH!);
+    this.eventStream = new EventStream("http://135.181.75.106:9999/events/deploys"!);
 
 
     this.startListeningEE();
@@ -81,6 +85,7 @@ export class CasperService {
   startListeningEE() {
     this.eventStream.subscribe(EventName.DeployProcessed, async (event) => {
       const { deploy_hash, execution_result } = event.body.DeployProcessed;
+      console.log ( "event processed", deploy_hash);
 
       const foundDeploy = this.pendingDeploys.find(
         (d) => d.hash === deploy_hash
@@ -126,6 +131,10 @@ export class CasperService {
       ],
     }).exec();
 
+    console.log('fund aacount size: %d', FUND_ACCOUNT_SIZE);
+    console.log( "casper private key: " , CASPER_PRIVATE_KEY);
+    console.log( "key variants.ed25519", KEY_VARIANTS.ED25519 );
+
     if (readyToUse.length < FUND_ACCOUNT_SIZE) {
       for (let i = readyToUse.length; i < FUND_ACCOUNT_SIZE; i++) {
         const { publicKeyInPem, publicKeyInHex, privateKeyInPem } =
@@ -137,7 +146,9 @@ export class CasperService {
           "5000000000"
         );
 
-        const deployHash = await transferDeploy.send(CASPER_NODE_ADDRESS);
+        console.log("Casper node address: ", process.env.CASPER_NODE_ADDRESS);
+
+        const deployHash = await transferDeploy.send(process.env.CASPER_NODE_ADDRESS!);
 
         console.log("Sent transfer deploy: ", deployHash);
 
@@ -179,7 +190,7 @@ export class CasperService {
     );
 
     try {
-      const hash = await deploy.send(CASPER_NODE_ADDRESS);
+      const hash = await deploy.send(process.env.CASPER_NODE_ADDRESS!);
       this.pendingDeploys = [
         ...this.pendingDeploys,
         { hash, type: DeployTypes.Mint },

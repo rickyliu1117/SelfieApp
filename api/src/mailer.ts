@@ -78,6 +78,7 @@ export const sendEmail = (message: {
   console.log(new Date());
   console.log(`E-mail sent to: ${message.to}`);
   console.log(`*** Log:`);
+  console.log(`email info:, ${message.html}`);
   //console.log(JSON.stringify(info));
 };
   
