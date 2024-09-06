@@ -44,3 +44,5 @@ export enum SubmissionType {
   Photo = "Photo NFT",
   Video = "Video NFT"
 }
+
+

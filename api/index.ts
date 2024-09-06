@@ -7,7 +7,7 @@ import blake from "blakejs";
 import { runDB, Submission, IDeploy, IKeyPair } from "./src/db";
 import { createMessage, sendEmail } from "./src/mailer";
 import { guidGenerator } from "./src/utils";
-import { CasperService } from "./src/casper";
+import { CasperService } from "./src/casperservice";
 import { ReedemStatus, DeployStatus, SubmissionType } from "./src/types";
 //import { s3, convertBase64ToBuffer } from "./src/s3";
 import { EXTENSION_BY_SUBMIT_TYPE } from "./src/constants";
@@ -210,9 +210,9 @@ const run = async () => {
     });
 
     console.log( "code = %s, email = %s", code, email);
-    console.log( "assignedKeyPair: 111111111, assignedKeyPair", existingUser);
+   // console.log( "assignedKeyPair: 111111111, assignedKeyPair", existingUser);
     if (existingUser) {
-      console.log( "assignedKeyPair: 2222222222, assignedKeyPair");
+     // console.log( "assignedKeyPair: 2222222222, assignedKeyPair");
       const populatedKeyPair = await existingUser.populate<{
         assignedKeyPair: IKeyPair;
       }>("assignedKeyPair");
@@ -226,7 +226,7 @@ const run = async () => {
           url: value.url,
           description: value.description,
           organization: value.organization,
-          event: '2024 Web3 Summit, HK'
+          event: '2024 Web3 Summit'
         },
         populatedKeyPair.assignedKeyPair.publicKeyInHex
       );
@@ -255,7 +255,7 @@ const run = async () => {
           url: value.url,
           description: value.description,
           organization: value.organization,
-          event: 'Austin, Texas'
+          event: '2024 Web3 Summit'
         },
         fundedAccount.publicKeyInHex
       );
@@ -295,16 +295,16 @@ const run = async () => {
         image.replace(/^data:image\/\w+;base64,/, ""),
         "base64"
       );
-      const uploaded = await s3
-        .upload({
-          Bucket: process.env.AWS_BUCKET_NAME!,
-          Key: `raw/${imageHash}.jpg`,
-          ContentEncoding: "base64",
-          Body: buf,
-          ContentType: "image/jpeg",
-        })
-        .promise();
-      s3FileURL = `${process.env.S3_URL}/${filePath}`;
+      // const uploaded = await s3
+      //   .upload({
+      //     Bucket: process.env.AWS_BUCKET_NAME!,
+      //     Key: `raw/${imageHash}.jpg`,
+      //     ContentEncoding: "base64",
+      //     Body: buf,
+      //     ContentType: "image/jpeg",
+      //   })
+      //   .promise();
+       s3FileURL = `${process.env.S3_URL}/${filePath}`;
     }
 
     if (s3FileURL) {

@@ -2,7 +2,7 @@ import {
   Keys,
   decodeBase64,
   DeployUtil,
-  CLPublicKey
+  CLPublicKey,
 } from "casper-js-sdk";
 
 import {
@@ -33,6 +33,29 @@ export const getKeysFromHexPrivKey = (
 
   throw Error("Unsupported key type");
 };
+
+  /**
+   * Parse the key pair from a public key file and the corresponding private key file
+   * @param {string} publicKeyPath Path of public key file
+   * @param {string} privateKeyPath Path of private key file
+   * @returns A new `AsymmetricKey`
+   */
+  // public static parseKeyFiles(
+  //   publicKeyPath: string,
+  //   privateKeyPath: string
+  // ): AsymmetricKey {
+  //   const publicKey = Ed25519.parsePublicKeyFile(publicKeyPath);
+  //   const privateKey = Ed25519.parsePrivateKeyFile(privateKeyPath);
+  //   // nacl expects that the private key will contain both.
+  //   return new Ed25519({
+  //     publicKey,
+  //     secretKey: Buffer.concat([privateKey, publicKey])
+  //   });
+  // }
+// export const USER1_KEYS = Keys.Ed25519.parseKeyFiles(
+//   `${USER1_KEY_PAIR_PATH}/public_key.pem`,
+//   `${USER1_KEY_PAIR_PATH}/secret_key.pem`
+// );
 
 export const makeTransferDeploy = (
   to: CLPublicKey,

@@ -5,13 +5,18 @@ import {
   decodeBase64,
   EventStream,
   EventName,
+  Contracts,
+  RuntimeArgs,
+  CLValueBuilder,
+  CLString,
+  CLKeyParameters,
+  CLKey,
+  CasperServiceByJsonRPC,
 } from "casper-js-sdk";
 
 import {
-  CEP47Client,
-  CEP47Events,
-  CEP47EventParser,
-} from "casper-cep47-js-client";
+  CEP78Client,
+} from "casper-cep78-js-client";
 
 import { KeyPair, Deploy } from "./db";
 
@@ -48,25 +53,26 @@ const hostKeys = getKeysFromHexPrivKey(
   KEY_VARIANTS.ED25519
 );
 
+
 export class CasperService {
   pendingDeploys: IPendingDeploy[] = [];
   eventStream: EventStream;
-  contractClient: CEP47Client;
+  //contractClient: CEP47Client;
+  cep78Client: CEP78Client;
+
+  //casperClient: CasperServiceByJsonRPC;
 
   constructor() {
     this.bootstrapPendingDeploys();
     this.bootstrapAccounts();
 
-    this.contractClient = new CEP47Client(
-      process.env.CASPER_NODE_ADDRESS!,
-      process.env.CASPER_CHAIN_NAME!
-    );
+    this.cep78Client = new CEP78Client( process.env.CASPER_NODE_ADDRESS!, process.env.CASPER_CHAIN_NAME!);
 
+    this.cep78Client.setContractHash(process.env.CASPER_CONTRACT_HASH!);
+
+    //this.casperClient = new CasperServiceByJsonRPC(process.env.CASPER_NODE_ADDRESS!)
     
-
-    this.contractClient.setContractHash(process.env.CASPER_CONTRACT_HASH!);
-    this.eventStream = new EventStream("http://135.181.75.106:9999/events/deploys"!);
-
+    this.eventStream = new EventStream("http://135.181.165.233:9999/events/main/"!);
 
     this.startListeningEE();
   }
@@ -133,7 +139,7 @@ export class CasperService {
 
     console.log('fund aacount size: %d', FUND_ACCOUNT_SIZE);
     console.log( "casper private key: " , CASPER_PRIVATE_KEY);
-    console.log( "key variants.ed25519", KEY_VARIANTS.ED25519 );
+   // console.log( "key variants.ed25519", KEY_VARIANTS.ED25519 );
 
     if (readyToUse.length < FUND_ACCOUNT_SIZE) {
       for (let i = readyToUse.length; i < FUND_ACCOUNT_SIZE; i++) {
@@ -178,19 +184,78 @@ export class CasperService {
     }
   }
 
+  // {
+  //   owner: FAUCET_KEYS.publicKey,
+  //   meta: {
+  //     color: "Blue",
+  //     size: "Medium",
+  //     material: "Aluminum",
+  //     condition: "Used",
+  //   },
+  //   collectionName: "my-collection",
+  // },
+
+  
+
   async mintToken(id: number, metadata: NFTMetaData, recipient: string) {
     const recipientPK = CLPublicKey.fromHex(recipient);
-    const deploy = await this.contractClient.mint(
-      recipientPK,
-      [`${id}`],
-      [new Map(Object.entries(metadata))],
-      "2000000000",
+    console.log ( "recipientPK: ", recipientPK);
+    console.log ("value id: ", id);
+    console.log ( "metadata: ", metadata );
+    console.log ( 'hostkeys.publickey: ', hostKeys.publicKey );
+    const runtimeArguments = RuntimeArgs.fromMap( {message: CLValueBuilder.string("Hello World")} );
+   
+    const mintArgs = {
+      owner: recipientPK,
+      // meta: {
+      //   contentHash: '6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be',
+      //   name: 'Micky',
+      //   url: 'https://aws.amazon.com/nft/6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be.jpg',
+      //   description: 'Micky',
+      //   organization: 'Company',
+      //   event: '2024 Web3 Summit'
+      //   },
+      // };
+    
+      meta: {
+        name: 'Micky',
+        token_uri: 'https://aws.amazon.com/nft/6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be.jpg',
+        checksum: "940bffb3f2bba35f84313aa26da09ece3ad47045c6a1292c2bbd2df4ab1a55fb",
+        },
+      };
+
+    const runtimeArgs = RuntimeArgs.fromMap({
+      token_owner: CLValueBuilder.key(mintArgs.owner),
+      token_meta_data: CLValueBuilder.string(JSON.stringify(mintArgs.meta)),
+    });
+
+    const useSessionCode = false;
+
+    const mintDeploy = this.cep78Client.mint(
+      {
+        owner: recipientPK,
+        // meta: {
+        //   contentHash: '6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be',
+        //   name: 'Micky',
+        //   url: 'https://aws.amazon.com/nft/6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be.jpg',
+        //   description: 'Micky',
+        //   organization: 'Company',
+        //   event: '2024 Web3 Summit'
+        //   },
+        meta: {
+          name: 'Micky',
+          token_uri: 'https://aws.amazon.com/nft/6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be.jpg',
+          checksum: "940bffb3f2bba35f84313aa26da09ece3ad47045c6a1292c2bbd2df4ab1a55fb",
+          },
+      },
+      {useSessionCode},
+      "2000000000", // 1 CSPR (10^9 Motes)
       hostKeys.publicKey,
-      [hostKeys]
-    );
+      [hostKeys],
+    )
 
     try {
-      const hash = await deploy.send(process.env.CASPER_NODE_ADDRESS!);
+      const hash = await mintDeploy.send(process.env.CASPER_NODE_ADDRESS!);
       this.pendingDeploys = [
         ...this.pendingDeploys,
         { hash, type: DeployTypes.Mint },
