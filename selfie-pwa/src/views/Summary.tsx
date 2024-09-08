@@ -61,10 +61,10 @@ const Summary = ({
               </>
             }
 
-            <BiggerText>Casper's Party Under the Big Top</BiggerText>
+            <BiggerText>Web3 Summit</BiggerText>
             <Subtitle>Event</Subtitle>
 
-            <BiggerText>Austin, Texas</BiggerText>
+            <BiggerText>HK, China</BiggerText>
             <Subtitle>Location</Subtitle>
 
             <BiggerText>{new Date().toISOString().split('T')[0]}</BiggerText>

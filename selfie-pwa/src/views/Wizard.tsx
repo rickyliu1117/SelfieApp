@@ -96,7 +96,7 @@ const StepOne = ({
       <div className="flex-1 flex justify-center items-center">
         <div className="max-w-lg">
           <h1 className="text-5xl font-bold leading-normal">
-            Mint your NFT selfie or video on the Casper blockchain
+            Mint your NFT selfie or video on the blockchain
           </h1>
         </div>
       </div>
@@ -145,7 +145,7 @@ const Claimed = ({
         </p>
         <p>
           Check your inbox soon — you will receive an email to mint your NFT
-          Selfie on the Casper blockchain.
+          Selfie on the blockchain.
         </p>
         <p className="mb-4">
           If you have any questions, you can reach us at support@nftselfie.app.
