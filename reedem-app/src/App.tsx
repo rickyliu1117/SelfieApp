@@ -70,12 +70,12 @@ const Summary = ({
             }
 
             <>
-              <BiggerText>Casper's Party Under the Big Top</BiggerText>
+              <BiggerText>at the Web3 Summit</BiggerText>
               <Subtitle>Event</Subtitle>
             </>
 
             <>
-              <BiggerText>Austin, Texas</BiggerText>
+              <BiggerText>Hong Kong, China</BiggerText>
               <Subtitle>Location</Subtitle>
             </>
 
@@ -214,7 +214,7 @@ const StatusScreen = () => {
       return <MintedScreen value={value} />;
     if (status === "REEDEM_IN_PROGRESS")
       return <MintingScreen deployHash={value!.hash} refresh={fetchStatus} />;
-    if (status === "REEDEM_READY" || status === "REEDEM_READY_EXISTING_USER") {
+    if (status === "REEDEM_READY" || status === "REEDEM_READY_EXISTING_USER" || status === "REEDEM_FAILED") {
       const existingUser = status === "REEDEM_READY_EXISTING_USER";
       return (
         <div className="flex flex-col items-center justify-center">
