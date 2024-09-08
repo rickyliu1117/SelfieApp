@@ -49,22 +49,22 @@ DeploySchema.post("save", async (doc) => {
       // const buf = convertBase64ToBuffer(submission.content);
       const fileName = `${submission.contentHash}.${EXTENSION_BY_SUBMIT_TYPE[submission.submitType]}`;
 
-      const uploaded = await s3
-        .copyObject({
-          Bucket: process.env.AWS_BUCKET_NAME!,
-          CopySource: `${process.env.AWS_BUCKET_NAME}/submited/${fileName}`,
-          Key: `nft/${fileName}`
-        })
-        .promise();
+      // const uploaded = await s3
+      //   .copyObject({
+      //     Bucket: process.env.AWS_BUCKET_NAME!,
+      //     CopySource: `${process.env.AWS_BUCKET_NAME}/submited/${fileName}`,
+      //     Key: `nft/${fileName}`
+      //   })
+      //   .promise();
 
-      await s3.deleteObject({
-        Bucket: process.env.AWS_BUCKET_NAME!,
-        Key: `submited/${fileName}`,
-      }).promise();
+      // await s3.deleteObject({
+      //   Bucket: process.env.AWS_BUCKET_NAME!,
+      //   Key: `submited/${fileName}`,
+      // }).promise();
 
       sendEmail(
         createSuccessMessage(
-          `Casper NFT Selfie <${process.env.SMTP_FROM}>`,
+          `Your NFT Selfie <${process.env.SMTP_FROM}>`,
           submission.email,
           submission.name,
           submission.code,

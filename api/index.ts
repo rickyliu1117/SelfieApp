@@ -30,19 +30,19 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 enum FILTER_LIST {
-  beauty = "filter=beauty&options=percent:45%", 
-  dreaming = "filter=dreaming&options=percent:40%", 
-  fairy = "filter=fairy&options=percent:50%", 
-  floating = "filter=floating&options=percent:50%", 
-  illusion = "filter=illusion&options=percent:50%", 
-  kandinsky = "filter=kandinsky&options=percent:40%", 
-  landscape = "filter=landscape&options=percent:50%", 
-  picasso = "filter=picasso&options=percent:75%", 
+  beauty = "filter=beauty&options=percent:45%",
+  dreaming = "filter=dreaming&options=percent:40%",
+  fairy = "filter=fairy&options=percent:50%",
+  floating = "filter=floating&options=percent:50%",
+  illusion = "filter=illusion&options=percent:50%",
+  kandinsky = "filter=kandinsky&options=percent:40%",
+  landscape = "filter=landscape&options=percent:50%",
+  picasso = "filter=picasso&options=percent:75%",
   vangogh = "filter=vangogh&options=percent:70%"
 };
 
 // TODO: Move somewhere to utils
-const processURL = (photoUrl: string, filter: string ) => {
+const processURL = (photoUrl: string, filter: string) => {
   const index = Object.keys(FILTER_LIST).indexOf(filter);
   return `${process.env
     .RAPID_API_URL!}?url=${photoUrl}&${Object.values(FILTER_LIST)[index]}`
@@ -53,27 +53,27 @@ const run = async () => {
 
   const casperService = new CasperService();
 
- /**
- * @api {post} content Create a new Content
- * @apiVersion 0.3.0
- * @apiName PostContent
- * @apiPermission none
- *
- * @apiDescription In this case "apiErrorStructure" is defined and used.
- * Define blocks with params that will be used in several functions, so you dont have to rewrite them.
- *
- * @apiBody {String} name Name of the Conent
- * @apiBody {String} description Description of the User
- * @apiBody {String} extraInfo.nickname Nickname of the user
- * @apiBody {Boolean} extraInfo.isVegan=true Is the user vegan? (boolean with default)
- * @apiBody {Boolean} extraInfo.isAlive Is the user alive? (boolean with no default)
- * @apiBody {String} extraInfo.secrets.crush The user secret crush
- * @apiBody {Number} extraInfo.secrets.hair=1000 Number of hair of user
- *
- * @apiSuccess {Number} id         The new Users-ID.
- *
- * @apiUse CreateUserError
- */ 
+  /**
+  * @api {post} content Create a new Content
+  * @apiVersion 0.3.0
+  * @apiName PostContent
+  * @apiPermission none
+  *
+  * @apiDescription In this case "apiErrorStructure" is defined and used.
+  * Define blocks with params that will be used in several functions, so you dont have to rewrite them.
+  *
+  * @apiBody {String} name Name of the Selfier
+  * @apiBody {String} description Description of the Selfie
+  * @apiBody {String} organization Org of the Selfier
+  * @apiBody {String} email Email address of the Selfier 
+  * @apiBody {ByteArray} contentHash Content hash of the selfie
+  * @apiBody {ByteArray} content   Content of the selfie
+  * @apiBody {Number} submitType Selfie type is photo or video
+  *
+  * @apiSuccess {Number} id         The new Users-ID.
+  *
+  * @apiUse CreateUserError
+  */
 
   app.post("/content", async (req: Request, res: Response) => {
     const { name, description, organization, email, contentHash, content, submitType } =
@@ -106,7 +106,7 @@ const run = async () => {
 
     sendEmail(
       createMessage(
-        `Casper NFT Selfie <${process.env.SMTP_FROM}>`,
+        `Your NFT Selfie <${process.env.SMTP_FROM}>`,
         email,
         name,
         code
@@ -151,6 +151,10 @@ const run = async () => {
         (d) => d.status === DeployStatus.Completed
       );
 
+      const failedDeploy = (populated.deploys as IDeploy[]).find(
+        (d) => d.status === DeployStatus.Failed
+      );
+
       if (successfullDeploy) {
         return {
           ok: false,
@@ -165,6 +169,15 @@ const run = async () => {
           status: ReedemStatus.InProgress,
           value: pendingDeploy,
         };
+      }
+
+      if( failedDeploy){
+        console.log( "failed deploy: the previous NFT mint deploy failed ");
+        return {
+          ok: false,
+          status: ReedemStatus.Failed,
+          value: foundSubmission,
+        }
       }
     }
 
@@ -200,7 +213,8 @@ const run = async () => {
       email as string
     );
 
-    if (!ok) {
+    //If the previous mint deploy failed, the selfie can retry to reedem the NFT
+    if (!ok && status != ReedemStatus.Failed) {
       return res.json({ ok, status });
     }
 
@@ -209,15 +223,17 @@ const run = async () => {
       assignedKeyPair: { $ne: null },
     });
 
-    console.log( "code = %s, email = %s", code, email);
-   // console.log( "assignedKeyPair: 111111111, assignedKeyPair", existingUser);
+    console.log("code = %s, email = %s", code, email);
+    console.log("Mint token for existing user: 1111111111111111", existingUser);
+
+    //Mint NFT for the submission which was already associated with a key pair.
     if (existingUser) {
-     // console.log( "assignedKeyPair: 2222222222, assignedKeyPair");
       const populatedKeyPair = await existingUser.populate<{
         assignedKeyPair: IKeyPair;
       }>("assignedKeyPair");
 
-      console.log( "assignedKeyPair: 33333333333, assignedKeyPair");
+      console.log("Mint token for existing user: 222222222222222222222", existingUser);
+
       const sentDeploy = await casperService.mintToken(
         value.id,
         {
@@ -233,8 +249,10 @@ const run = async () => {
 
       value.assignedKeyPair = populatedKeyPair.assignedKeyPair;
       if (sentDeploy) {
+        console.log ("sentdeploy.deployInDB: 3333333333333333", sentDeploy.deployInDB);
         value.deploys.push(sentDeploy.deployInDB);
         value.save();
+
         return res.json({
           ok: true,
           value: { privateKeyInPem: null, hash: sentDeploy.hash },
@@ -242,11 +260,13 @@ const run = async () => {
       }
     }
 
-    console.log( "assignedKeyPair: 4444444444444, assignedKeyPair");
+    console.log("Find a FundedAccount and assign this account to the submission: 444444444444444444");
     const fundedAccount = await casperService.getFundedAccount();
     if (fundedAccount && value) {
-      console.log( "assignedKeyPair: 555555555555, assignedKeyPair");
+      console.log("Found funded account and submission: 5555555555555555555555");
       const { privateKeyInPem } = fundedAccount;
+
+      //Mint NFT for the submissison to the funded account ( owner )
       const sentDeploy = await casperService.mintToken(
         value.id,
         {
@@ -259,10 +279,13 @@ const run = async () => {
         },
         fundedAccount.publicKeyInHex
       );
+
+      //Associated this funded account with the submission in MongoDB
       value.assignedKeyPair = fundedAccount;
       if (sentDeploy) {
         value.deploys.push(sentDeploy.deployInDB);
         value.save();
+
         res.json({
           ok: true,
           value: { privateKeyInPem, hash: sentDeploy.hash },
@@ -304,7 +327,7 @@ const run = async () => {
       //     ContentType: "image/jpeg",
       //   })
       //   .promise();
-       s3FileURL = `${process.env.S3_URL}/${filePath}`;
+      s3FileURL = `${process.env.S3_URL}/${filePath}`;
     }
 
     if (s3FileURL) {
