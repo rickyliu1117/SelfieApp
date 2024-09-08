@@ -121,7 +121,7 @@ export class CasperService {
       return readyToUse;
     }
   }
-  
+
   async sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -177,57 +177,18 @@ export class CasperService {
     }
   }
 
-  async mintToken(id: number, metadata: NFTMetaData, recipient: string) {
+  async mintToken(id: number, metadata: Record<string,string>, recipient: string) {
     const recipientPK = CLPublicKey.fromHex(recipient);
-    console.log("recipientPK: ", recipientPK);
-    console.log("value id: ", id);
-    console.log("metadata: ", metadata);
-    console.log('hostkeys.publickey: ', hostKeys.publicKey);
-    const runtimeArguments = RuntimeArgs.fromMap({ message: CLValueBuilder.string("Hello World") });
+    console.log("metadata: ", metadata)
 
     const mintArgs = {
       owner: recipientPK,
-      // meta: {
-      //   contentHash: '6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be',
-      //   name: 'Micky',
-      //   url: 'https://aws.amazon.com/nft/6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be.jpg',
-      //   description: 'Micky',
-      //   organization: 'Company',
-      //   event: '2024 Web3 Summit'
-      //   },
-      // };
-
-      meta: {
-        name: 'Micky',
-        token_uri: 'https://aws.amazon.com/nft/6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be.jpg',
-        checksum: "940bffb3f2bba35f84313aa26da09ece3ad47045c6a1292c2bbd2df4ab1a55fb",
-      },
+      meta: metadata,  
     };
-
-    const runtimeArgs = RuntimeArgs.fromMap({
-      token_owner: CLValueBuilder.key(mintArgs.owner),
-      token_meta_data: CLValueBuilder.string(JSON.stringify(mintArgs.meta)),
-    });
 
     const useSessionCode = false;
 
-    const mintDeploy = this.cep78Client.mint(
-      {
-        owner: recipientPK,
-        meta: {
-          contentHash: '6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be',
-          name: 'Micky',
-          url: 'https://aws.amazon.com/nft/6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be.jpg',
-          description: 'Micky',
-          organization: 'Company',
-          event: '2024 Web3 Summit'
-        },
-        // meta: {
-        //   name: 'Micky',
-        //   token_uri: 'https://aws.amazon.com/nft/6d6b4b2e04f161d73003da81d15f0b88614578edc9d8e4d43ec846b086c401be.jpg',
-        //   checksum: "940bffb3f2bba35f84313aa26da09ece3ad47045c6a1292c2bbd2df4ab1a55fb",
-        //   },
-      },
+    const mintDeploy = this.cep78Client.mint(mintArgs,
       { useSessionCode },
       "5000000000", // 1 CSPR (10^9 Motes)
       hostKeys.publicKey,
@@ -240,11 +201,13 @@ export class CasperService {
         ...this.pendingDeploys,
         { hash, type: DeployTypes.Mint },
       ];
+
       const deployInDB = new Deploy({
         hash: hash,
         status: DeployStatus.Pending,
         type: DeployTypes.Mint,
       });
+
       await deployInDB.save();
 
       return { hash, deployInDB };
