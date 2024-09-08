@@ -109,7 +109,7 @@ const MintedScreen = ({ value }: { value: any }) => {
       <StepHeader>Mint complete!</StepHeader>
       <p>
         Your NFT Selfie now minted and in your full possession at your address
-        on the Casper blockchain.
+        on the blockchain.
       </p>
       <br />
       <p>
@@ -118,7 +118,7 @@ const MintedScreen = ({ value }: { value: any }) => {
       </p>
       <br />
       <p>
-        Thanks for joining us at Casper's Party Under the Big Top!
+        Thanks for joining us at 2024 Web3 Summit!
       </p>
       <br />
       <div className="m-4">

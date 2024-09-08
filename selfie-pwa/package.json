@@ -1,7 +1,7 @@
 {
   "name": "selfie-pwa",
   "version": "0.1.0",
-  "author": "Jan Hoffmann <jan@casperlabs.io>",
+  "author": "Ricky Liu <rickyliu1117@gmail.com>",
   "private": true,
   "dependencies": {
     "@headlessui/react": "^1.6.1",
