@@ -24,7 +24,7 @@ export const createMessage = (
 <p>Please click the link below to open a page with a few simple instructions.</p>
 <p>You will need to safely save and store your private key file which we will download to your device during the minting process, as this will allow you to access the unique address where your NFT Selfie will live on the blockchain.</p>
 
-${"https:" + process.env.REEDEM_URL + "/?" + "code=" + encodeURIComponent(code) + "&email=" + encodeURIComponent(to)}
+${process.env.REEDEM_URL + "/?" + "code=" + encodeURIComponent(code) + "&email=" + encodeURIComponent(to)}
 
 <p>If at any time you need help or have questions, you can reach out to support@nftselfie.app for assistance.</p>
 <p>- NFT Selfie Team</p>
@@ -42,8 +42,8 @@ export const createSuccessMessage = (
   to,
   subject: "Your NFT Selfie is Minted!",
   html: `<p>Congratulations… Your NFT Selfie is Minted!</p>
-${"https:" + process.env.REEDEM_URL + "/?" + "code=" + encodeURIComponent(code) + "&email=" + encodeURIComponent(to)}
-<p>You can also view your NFT and public key on the cspr.live block explorer:</p>
+${process.env.REEDEM_URL + "/?" + "code=" + encodeURIComponent(code) + "&email=" + encodeURIComponent(to)}
+<p>You can also view your NFT and public key on the testnet.cspr.live block explorer:</p>
 <p>https:${BLOCK_EXPLORER_URL}/deploy/${deployHash}</p>
 <p>Your keys were downloaded to your device when minting the NFT Selfie. Please store the keys and keep them safe. Don't worry... if you lose or misplace your keys, you will be able to recover them.</p>
 <p>Thanks for joining us at Web3 Summit in Hong Kong 2024!</p>

@@ -86,7 +86,7 @@ const Summary = ({
         <div className="flex m-4">
           <a target="_blank" href={`${BLOCK_EXPLORER_URL}/deploy/${deployHash}`} rel="noreferrer">
             <Button onClick={() => {}}>
-                Show on cspr.live
+                Show on testnet.cspr.live
             </Button>
           </a>
           <Button onClick={onClose}>Close</Button>
@@ -149,7 +149,7 @@ const MintingScreen = ({ refresh, deployHash }: any) => {
           target="_blank"
           href={`${BLOCK_EXPLORER_URL}/deploy/${deployHash}`} rel="noreferrer"
         >
-          cspr.live
+          testnet.cspr.live
         </a>
       </p>
       <br />
