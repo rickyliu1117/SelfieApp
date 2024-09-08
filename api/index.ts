@@ -224,15 +224,12 @@ const run = async () => {
     });
 
     console.log("code = %s, email = %s", code, email);
-    console.log("Mint token for existing user: 1111111111111111", existingUser);
 
     //Mint NFT for the submission which was already associated with a key pair.
     if (existingUser) {
       const populatedKeyPair = await existingUser.populate<{
         assignedKeyPair: IKeyPair;
       }>("assignedKeyPair");
-
-      console.log("Mint token for existing user: 222222222222222222222", existingUser);
 
       const sentDeploy = await casperService.mintToken(
         value.id,
@@ -249,7 +246,6 @@ const run = async () => {
 
       value.assignedKeyPair = populatedKeyPair.assignedKeyPair;
       if (sentDeploy) {
-        console.log ("sentdeploy.deployInDB: 3333333333333333", sentDeploy.deployInDB);
         value.deploys.push(sentDeploy.deployInDB);
         value.save();
 
@@ -260,10 +256,9 @@ const run = async () => {
       }
     }
 
-    console.log("Find a FundedAccount and assign this account to the submission: 444444444444444444");
+    // console.log("Find a FundedAccount and assign this account to the submission");
     const fundedAccount = await casperService.getFundedAccount();
     if (fundedAccount && value) {
-      console.log("Found funded account and submission: 5555555555555555555555");
       const { privateKeyInPem } = fundedAccount;
 
       //Mint NFT for the submissison to the funded account ( owner )

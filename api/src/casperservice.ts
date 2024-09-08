@@ -179,7 +179,7 @@ export class CasperService {
 
   async mintToken(id: number, metadata: Record<string,string>, recipient: string) {
     const recipientPK = CLPublicKey.fromHex(recipient);
-    console.log("metadata: ", metadata)
+    // console.log("metadata: ", metadata)
 
     const mintArgs = {
       owner: recipientPK,
