@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "Jan Hoffmann <jan@casperlabs.io>",
+  "author": "Ricky Liu <rickyliu1117@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "@types/mongoose-sequence": "^3.0.7",

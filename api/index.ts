@@ -239,7 +239,7 @@ const run = async () => {
           url: value.url,
           description: value.description,
           organization: value.organization,
-          event: '2024 Web3 Summit'
+          event: 'The Web3 Forum 2024'
         },
         populatedKeyPair.assignedKeyPair.publicKeyInHex
       );
@@ -270,7 +270,7 @@ const run = async () => {
           url: value.url,
           description: value.description,
           organization: value.organization,
-          event: '2024 Web3 Summit'
+          event: '2024 Web3 '
         },
         fundedAccount.publicKeyInHex
       );
