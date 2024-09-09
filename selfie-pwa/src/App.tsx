@@ -8,7 +8,7 @@ import "./App.css";
 
 const Header = () => (
   <div className="md:flex md:items-center md:justify-center h-30 p-4">
-    <img src="/casperpartyunderthebigtop.svg" alt="Logo" />
+    <img src="/web3forum.svg" alt="Logo" />
   </div>
 );
 
@@ -20,7 +20,7 @@ const App = () => {
     <div className="flex flex-col">
       <div
         className="min-h-screen flex-1 bg-cover mt-30"
-        style={{ backgroundImage: "url(/casper-bg.png)" }}
+        style={{ backgroundImage: "url(/app-bg.png)" }}
       >
         <Header />
         <Wizard />

@@ -94,7 +94,7 @@ const StepOne = ({
         </div>
       </div>
       <div className="flex-1 flex justify-center items-center">
-        <div className="max-w-lg">
+        <div className="max-w-xl">
           <h1 className="text-5xl font-bold leading-normal">
             Mint your NFT selfie or video on the blockchain
           </h1>
