@@ -11,7 +11,7 @@ import "./App.css";
 
 const Header = () => (
   <div className="md:flex md:items-center md:justify-center h-30 p-4">
-    <img src="/casperpartyunderthebigtop.svg" alt="Logo" />
+    <img src="/web3forum.svg" alt="Logo" />
   </div>
 );
 
@@ -70,12 +70,12 @@ const Summary = ({
             }
 
             <>
-              <BiggerText>at the Web3 Summit</BiggerText>
+              <BiggerText>at the Web3 Forum</BiggerText>
               <Subtitle>Event</Subtitle>
             </>
 
             <>
-              <BiggerText>Hong Kong, China</BiggerText>
+              <BiggerText>Hong Kong SAR</BiggerText>
               <Subtitle>Location</Subtitle>
             </>
 
@@ -118,7 +118,7 @@ const MintedScreen = ({ value }: { value: any }) => {
       </p>
       <br />
       <p>
-        Thanks for joining us at 2024 Web3 Summit!
+        Thanks for joining us at the Web3 Forum 2024!
       </p>
       <br />
       <div className="m-4">
@@ -136,7 +136,7 @@ const MintingScreen = ({ refresh, deployHash }: any) => {
 
   return (
     <div className="text-center center">
-      <p>Your NFT Selfie is minting on the Casper blockchain.</p>
+      <p>Your NFT Selfie is minting on the blockchain.</p>
       <br />
       <div className="flex items-center justify-center">
         <img className="rotating" src="./logo-spinner.png" />
@@ -266,7 +266,7 @@ const App = () => {
     <div className="flex flex-col">
       <div
         className="min-h-screen flex-1 bg-cover mt-30"
-        style={{ backgroundImage: "url(/casper-bg.png)" }}
+        style={{ backgroundImage: "url(/app-bg.png)" }}
       >
         <Header />
         <StatusScreen />
