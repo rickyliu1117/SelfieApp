@@ -70,7 +70,7 @@ const Summary = ({
             }
 
             <>
-              <BiggerText>at the Web3 Forum</BiggerText>
+              <BiggerText>at The Web3 Forum 2024</BiggerText>
               <Subtitle>Event</Subtitle>
             </>
 
@@ -118,7 +118,7 @@ const MintedScreen = ({ value }: { value: any }) => {
       </p>
       <br />
       <p>
-        Thanks for joining us at the Web3 Forum 2024!
+        Thanks for joining us at The Web3 Forum 2024!
       </p>
       <br />
       <div className="m-4">
